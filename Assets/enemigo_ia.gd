@@ -88,7 +88,12 @@ func _decidir_estado(distancia: float, lo_veo: bool) -> Estado:
 ##      ya están armadas como el nodo ParticulasImpacto de esta escena.
 func recibir_dano(cantidad: float) -> float:
 	vida = max(vida - cantidad, 0.0)
-	# TODO: agregar aquí el flash y las partículas.
+	var mat: Material = mesh.get_surface_override_material(0)
+	if mat == null:
+		mat = mesh.get_active_material(0)
+	if mat:
+		Efectos.flash(mat, "albedo_color", Color.WHITE, 0.1, self)
+	Efectos.particulas(particulas_impacto)
 	return vida
 
 
