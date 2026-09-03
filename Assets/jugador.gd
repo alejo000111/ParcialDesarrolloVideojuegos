@@ -2,6 +2,8 @@ extends CharacterBody3D
 
 ## Velocidad máxima de desplazamiento, en metros por segundo.
 @export var speed: float = 4.0
+## Agregar salto fuerza jugador  
+@export var jump_velocity: float = 4.5
 ## Cámara que define qué es "adelante". Si se deja vacía se usa la activa.
 @export var camara: Camera3D
 
@@ -9,7 +11,6 @@ extends CharacterBody3D
 func _ready() -> void:
 	if camara == null:
 		camara = get_viewport().get_camera_3d()
-
 
 func _physics_process(delta: float) -> void:
 	# --- Horizontal: hacia dónde quiere ir ------------------------------
@@ -29,5 +30,12 @@ func _physics_process(delta: float) -> void:
 	# TODO (Tarea 2): falta la función de salto completa. Todavía no hay
 	# gravedad ni velocity.y en absoluto — por eso caminar funciona bien
 	# aunque no exista ningún piso en la escena.
+	#Gravedad
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+		
+	#salto
+	if Input.is_action_just_pressed("saltar") and is_on_floor():
+		velocity.y = jump_velocity
 
 	move_and_slide()
