@@ -4,6 +4,10 @@ extends CharacterBody3D
 @export var speed: float = 4.0
 ## Agregar salto fuerza jugador  
 @export var jump_velocity: float = 4.5
+## Aceleración progresiva al moverse (punto 3)
+@export var aceleracion: float = 12.0
+## Fricción progresiva al frenar (punto 3)
+@export var friccion: float = 16.0
 ## Cámara que define qué es "adelante". Si se deja vacía se usa la activa.
 @export var camara: Camera3D
 
@@ -24,8 +28,12 @@ func _physics_process(delta: float) -> void:
 
 	# TODO (Tarea 3): esto asigna la velocidad DE GOLPE. Reemplazar por
 	# move_toward con aceleración y fricción, como en la Sesión 9.
-	velocity.x = direction.x * speed
-	velocity.z = direction.z * speed
+	if direction:
+		velocity.x = move_toward(velocity.x, direction.x * speed, aceleracion * delta)
+		velocity.z = move_toward(velocity.z, direction.z * speed, aceleracion * delta)
+	else:
+		velocity.x= move_toward(velocity.x, 0.0, friccion * delta)
+		velocity.z = move_toward(velocity.z, 0.0, friccion * delta)
 
 	# TODO (Tarea 2): falta la función de salto completa. Todavía no hay
 	# gravedad ni velocity.y en absoluto — por eso caminar funciona bien
